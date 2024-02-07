@@ -87,24 +87,24 @@ async function generateTraffic(page: Page, url: string) {
   console.log("Editing user details");
   await page.getByRole('link', { name: 'Edit user data' }).click();
   await page.waitForTimeout(3000);
-  await page.getByPlaceholder(`${first_name}`).fill(`${first_name}h`);
+  await page.getByPlaceholder(`FName`).fill(`${first_name}h`);
   await page.getByRole('button', { name: 'Save changes' }).click();
 
   // various login activity
   console.log("Performing various login that are present in application");
-  await page.getByRole('link', { name: `Log out ${first_name} ${last_name}` }).click();
+  await page.getByRole('link', { name: `Log out ${first_name}h ${last_name}` }).click();
   await page.waitForTimeout(1000);
-  await page.getByRole('link', { name: 'Sign in', exact: true }).click();
 
-  const options = ['html', 'csrf', 'csrf_dom', 'oidc']
+  const options = ['html', 'csrf', 'csrf_dom']
   for(const option of options) {
+    await page.getByRole('link', { name: 'Sign in', exact: true }).click();
     console.log(`selecting option ${option} from combobox`);
     await page.getByRole('combobox').selectOption(option);
     await page.getByPlaceholder('Email').fill(email);
     await page.getByPlaceholder('Password').fill('test123');
+    await page.waitForTimeout(5000);
     await page.getByRole('button', { name: 'sign in' }).click();
     await page.waitForTimeout(1000);
-    await page.getByRole('link', { name: `Log out ${first_name} ${last_name}` }).click();
-    await page.getByRole('link', { name: 'Sign in', exact: true }).click();
+    await page.getByRole('link', { name: `Log out ${first_name}h ${last_name}` }).click();
   }
 }
