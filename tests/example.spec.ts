@@ -34,6 +34,8 @@ async function generateTraffic(page: Page, url: string) {
   const card_number = getRandomNumber();
   const ph_number = getRandomNumber();
   const password = "test123";
+
+  console.log("Filling up registration form");
   await page.goto(url);
   await page.waitForTimeout(2000);
   await page.getByRole('link', { name: 'Sign in', exact: true }).click();
@@ -49,18 +51,21 @@ async function generateTraffic(page: Page, url: string) {
   await page.getByRole('button', { name: 'register' }).click();
 
   // login
+  console.log("login in");
   await page.waitForTimeout(10000);
   await page.getByPlaceholder('Email').fill(email);
   await page.getByPlaceholder('Password').fill(password);
   await page.getByRole('button', { name: 'sign in' }).click();
 
   // activity
+  console.log("Doing some activity");
   await page.waitForLoadState();
   await page.getByRole('link', { name: 'Marketplace' }).click();
   await page.getByTitle('Amethyst').click();
   await page.goto(`${url}/marketplace`);
 
   // testimonial
+  console.log("Writing testimonial");
   await page.getByRole('link', { name: 'Marketplace' }).click();
   await page.getByPlaceholder('Your Name').fill(first_name);
   await page.getByPlaceholder('Your Title').fill('po');
@@ -69,6 +74,7 @@ async function generateTraffic(page: Page, url: string) {
   await page.reload();
 
   // message on home screen
+  console.log("Writing message on home screen");
   await page.getByRole('link', { name: 'Home' }).click();
   await page.getByPlaceholder('Your Name').fill(first_name);
   await page.getByPlaceholder('Your Email').fill(email);
@@ -78,25 +84,27 @@ async function generateTraffic(page: Page, url: string) {
   await page.waitForLoadState();
 
   // edit user details
+  console.log("Editing user details");
   await page.getByRole('link', { name: 'Edit user data' }).click();
   await page.waitForTimeout(3000);
-  await page.getByPlaceholder('First name').click();
-  // await page.getByPlaceholder('First name').fill(`${first_name}h`);
+  await page.getByPlaceholder(`${first_name}`).fill(`${first_name}h`);
   await page.getByRole('button', { name: 'Save changes' }).click();
 
   // various login activity
+  console.log("Performing various login that are present in application");
   await page.getByRole('link', { name: `Log out ${first_name} ${last_name}` }).click();
   await page.waitForTimeout(1000);
   await page.getByRole('link', { name: 'Sign in', exact: true }).click();
 
   const options = ['html', 'csrf', 'csrf_dom', 'oidc']
-
   for(const option of options) {
+    console.log(`selecting option ${option} from combobox`);
     await page.getByRole('combobox').selectOption(option);
     await page.getByPlaceholder('Email').fill(email);
     await page.getByPlaceholder('Password').fill('test123');
     await page.getByRole('button', { name: 'sign in' }).click();
     await page.waitForTimeout(1000);
     await page.getByRole('link', { name: `Log out ${first_name} ${last_name}` }).click();
+    await page.getByRole('link', { name: 'Sign in', exact: true }).click();
   }
 }
